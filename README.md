@@ -4,7 +4,7 @@ A modern real estate marketplace built with React, TypeScript, and Vite. This pl
 
 ## 🚀 Live Demo
 
-Check out the live application: [TokenEstate](https://real-estate-ten-gilt.vercel.app)
+Check out the live application: [TokenEstate](https://real-estate-10kf4nmox-krishnav-kanois-projects.vercel.app)
 
 ## 🛠️ Built With
 
@@ -67,7 +67,7 @@ Create a `.env` file in the root directory with the following variables:
 ```env
 VITE_APP_TITLE=TokenEstate
 VITE_APP_DESCRIPTION=A modern real estate marketplace
-VITE_APP_URL=your-deployment-url
+VITE_APP_URL=https://real-estate-10kf4nmox-krishnav-kanois-projects.vercel.app
 ```
 
 ## 📝 License
