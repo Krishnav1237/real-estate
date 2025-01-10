@@ -1,4 +1,20 @@
-# React + TypeScript + Vite
+# Real Estate Marketplace
+
+A modern real estate marketplace built with React, TypeScript, and Vite. This platform allows users to browse, buy, and sell real estate properties with blockchain integration.
+
+## 🚀 Live Demo
+
+Check out the live application: [Real Estate Marketplace](https://real-estate-ten-gilt.vercel.app)
+
+## 🛠️ Built With
+
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Material-UI
+- Web3 Integration (Viem/Wagmi)
+- Smart Contracts (Solidity)
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
