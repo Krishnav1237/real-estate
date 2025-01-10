@@ -1,11 +1,7 @@
 import { ThemeProvider, CssBaseline, Box } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import '@rainbow-me/rainbowkit/styles.css';
-import { WagmiConfig } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { theme } from './styles/theme';
-import { config as wagmiConfig, chain } from './config/web3Config';
 
 // Pages
 import Layout from './components/Layout';
@@ -35,23 +31,19 @@ function App() {
         }}
       >
         <QueryClientProvider client={queryClient}>
-          <WagmiConfig config={wagmiConfig}>
-            <RainbowKitProvider modalSize="compact" chains={chain}>
-              <Router>
-                <Layout>
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/marketplace" element={<Marketplace />} />
-                    <Route path="/property/:id" element={<PropertyDetails />} />
-                    <Route path="/portfolio" element={<Portfolio />} />
-                    <Route path="/analytics" element={<Analytics />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/profile" element={<Profile />} />
-                  </Routes>
-                </Layout>
-              </Router>
-            </RainbowKitProvider>
-          </WagmiConfig>
+          <Router>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/marketplace" element={<Marketplace />} />
+                <Route path="/property/:id" element={<PropertyDetails />} />
+                <Route path="/portfolio" element={<Portfolio />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/profile" element={<Profile />} />
+              </Routes>
+            </Layout>
+          </Router>
         </QueryClientProvider>
       </Box>
     </ThemeProvider>

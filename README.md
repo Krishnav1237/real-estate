@@ -1,66 +1,75 @@
-# Real Estate Marketplace
+# TokenEstate - Real Estate Marketplace
 
-A modern real estate marketplace built with React, TypeScript, and Vite. This platform allows users to browse, buy, and sell real estate properties with blockchain integration.
+A modern real estate marketplace built with React, TypeScript, and Vite. This platform allows users to browse, buy, and sell real estate properties.
 
 ## 🚀 Live Demo
 
-Check out the live application: [Real Estate Marketplace](https://real-estate-ten-gilt.vercel.app)
+Check out the live application: [TokenEstate](https://real-estate-ten-gilt.vercel.app)
 
 ## 🛠️ Built With
 
 - React
 - TypeScript
 - Vite
-- Tailwind CSS
 - Material-UI
-- Web3 Integration (Viem/Wagmi)
-- Smart Contracts (Solidity)
+- Framer Motion
+- React Router
+- React Query
+- Leaflet Maps
+- Three.js
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📦 Installation
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/real-estate.git
+cd real-estate
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+2. Install dependencies:
+```bash
+npm install
 ```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+## 🚀 Deployment
+
+This project is configured for deployment on Vercel. To deploy:
+
+1. Install Vercel CLI:
+```bash
+npm install -g vercel
+```
+
+2. Login to Vercel:
+```bash
+vercel login
+```
+
+3. Deploy to Vercel:
+```bash
+vercel
+```
+
+4. For production deployment:
+```bash
+vercel --prod
+```
+
+## 🔧 Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+VITE_APP_TITLE=TokenEstate
+VITE_APP_DESCRIPTION=A modern real estate marketplace
+VITE_APP_URL=your-deployment-url
+```
+
+## 📝 License
+
+This project is licensed under the ISC License.

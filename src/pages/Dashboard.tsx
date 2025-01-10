@@ -25,7 +25,6 @@ import {
   FaChartBar,
   FaGlobe,
   FaBitcoin,
-  FaPercentage,
 } from 'react-icons/fa';
 import { SiPolygon } from 'react-icons/si';
 import { IoTrendingUp, IoTrendingDown } from 'react-icons/io5';
@@ -56,6 +55,16 @@ interface Property {
   }[];
 }
 
+interface PortfolioData {
+  totalValue: number;
+  totalTokens: number;
+  totalProperties: number;
+  monthlyIncome: number;
+  portfolioGrowth: number;
+  availableRewards: Record<string, number>;
+  properties: Property[];
+}
+
 // Mock data
 const tokenBalances: TokenBalance[] = [
   {
@@ -81,7 +90,7 @@ const tokenBalances: TokenBalance[] = [
   },
 ];
 
-const portfolioData = {
+const portfolioData: PortfolioData = {
   totalValue: 25000,
   totalTokens: 150,
   totalProperties: 5,
@@ -261,7 +270,7 @@ const Dashboard = () => {
   const [tabValue, setTabValue] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 

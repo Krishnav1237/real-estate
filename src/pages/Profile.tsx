@@ -14,13 +14,11 @@ import {
   Alert,
 } from '@mui/material';
 import { motion } from 'framer-motion';
-import { useAccount } from 'wagmi';
 import PersonIcon from '@mui/icons-material/Person';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SecurityIcon from '@mui/icons-material/Security';
 
 const Profile = () => {
-  const { address } = useAccount();
   const [editMode, setEditMode] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -85,7 +83,7 @@ const Profile = () => {
               {formData.name}
             </Typography>
             <Typography color="text.secondary" gutterBottom>
-              Wallet: {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Not Connected'}
+              Member since: {new Date().getFullYear()}
             </Typography>
             <Button
               variant={editMode ? 'contained' : 'outlined'}

@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import { Box, AppBar, Toolbar, Typography, Button, Container, useTheme, alpha } from '@mui/material';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import ThreeBackground from './ThreeBackground';
@@ -97,12 +96,6 @@ const Layout = ({ children }: LayoutProps) => {
                     </Button>
                   </motion.div>
                 ))}
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <ConnectButton />
-                </motion.div>
               </Box>
             </Toolbar>
           </Container>
