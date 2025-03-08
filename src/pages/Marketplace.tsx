@@ -15,8 +15,24 @@ import { MdSearch } from 'react-icons/md';
 import PropertyCard from '../components/PropertyCard';
 import TokenPurchaseModal from '../components/TokenPurchaseModal';
 
+// Define interface for property objects
+interface Property {
+  id: string;
+  title: string;
+  location: string;
+  price: number;
+  area: number;
+  imageUrl: string;
+  tokenPrice: number;
+  totalTokens: number;
+  availableTokens: number;
+  verified: boolean;
+  expectedReturn: number;
+  investmentPeriod: string;
+}
+
 // Mock data - replace with actual data from your smart contract
-const mockProperties = [
+const mockProperties: Property[] = [
   {
     id: '1',
     title: 'Luxury Penthouse in Miami',
@@ -107,14 +123,14 @@ const Marketplace = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedProperty, setSelectedProperty] = useState<any>(null);
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [purchaseModalOpen, setPurchaseModalOpen] = useState(false);
 
-  const handlePropertyClick = (property: any) => {
+  const handlePropertyClick = (property: Property) => {
     navigate(`/property/${property.id}`);
   };
 
-  const handlePurchaseClick = (property: any, event: React.MouseEvent) => {
+  const handlePurchaseClick = (property: Property, event: React.MouseEvent) => {
     event.stopPropagation();
     setSelectedProperty(property);
     setPurchaseModalOpen(true);
@@ -123,7 +139,7 @@ const Marketplace = () => {
   const handlePurchase = async (amount: number) => {
     try {
       // Implement your token purchase logic here
-      console.log(`Purchasing ${amount} tokens for property ${selectedProperty.id}`);
+      console.log(`Purchasing ${amount} tokens for property ${selectedProperty?.id}`);
       // Call your smart contract method
     } catch (error) {
       console.error('Purchase failed:', error);
@@ -132,117 +148,118 @@ const Marketplace = () => {
   };
 
   const filteredProperties = mockProperties.filter(property =>
-    property.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    property.location.toLowerCase().includes(searchQuery.toLowerCase())
+      property.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      property.location.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <Container maxWidth="xl">
-      {/* Hero Section */}
-      <Box sx={{ mb: 6, textAlign: 'center' }}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Typography
-            variant="h2"
-            gutterBottom
-            sx={{
-              fontWeight: 700,
-              background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              textAlign: 'center',
-              mb: 2,
-            }}
-          >
-            Discover Tokenized Properties
-          </Typography>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <Typography
-            variant="h5"
-            color="text.secondary"
-            sx={{ mb: 4, maxWidth: '800px', mx: 'auto' }}
-          >
-            Invest in premium real estate properties through fractional ownership
-          </Typography>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Search properties by name or location..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            sx={{
-              maxWidth: '600px',
-              background: alpha(theme.palette.background.paper, 0.5),
-              backdropFilter: 'blur(10px)',
-              borderRadius: 2,
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: alpha(theme.palette.primary.main, 0.2),
-                },
-                '&:hover fieldset': {
-                  borderColor: alpha(theme.palette.primary.main, 0.3),
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: theme.palette.primary.main,
-                },
-              },
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <MdSearch size={24} color={theme.palette.text.secondary} />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </motion.div>
-      </Box>
-
-      {/* Property Grid */}
-      <Grid container spacing={3}>
-        {filteredProperties.map((property, index) => (
-          <Grid item xs={12} sm={6} md={4} key={property.id}>
-            <motion.div
+      <Container maxWidth="xl">
+        {/* Hero Section */}
+        <Box sx={{ mb: 6, textAlign: 'center' }}>
+          <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.5 }}
+          >
+            <Typography
+                variant="h2"
+                gutterBottom
+                sx={{
+                  fontWeight: 700,
+                  background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  textAlign: 'center',
+                  mb: 2,
+                }}
             >
-              <PropertyCard
-                property={property}
-                onClick={() => handlePropertyClick(property)}
-              />
-            </motion.div>
-          </Grid>
-        ))}
-      </Grid>
+              Discover Tokenized Properties
+            </Typography>
+          </motion.div>
 
-      {/* Purchase Modal */}
-      {selectedProperty && (
-        <TokenPurchaseModal
-          open={purchaseModalOpen}
-          onClose={() => setPurchaseModalOpen(false)}
-          property={selectedProperty}
-          onPurchase={handlePurchase}
-        />
-      )}
-    </Container>
+          <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <Typography
+                variant="h5"
+                color="text.secondary"
+                sx={{ mb: 4, maxWidth: '800px', mx: 'auto' }}
+            >
+              Invest in premium real estate properties through fractional ownership
+            </Typography>
+          </motion.div>
+
+          <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <TextField
+                fullWidth
+                variant="outlined"
+                placeholder="Search properties by name or location..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                sx={{
+                  maxWidth: '600px',
+                  background: alpha(theme.palette.background.paper, 0.5),
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: 2,
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: alpha(theme.palette.primary.main, 0.2),
+                    },
+                    '&:hover fieldset': {
+                      borderColor: alpha(theme.palette.primary.main, 0.3),
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: theme.palette.primary.main,
+                    },
+                  },
+                }}
+                InputProps={{
+                  startAdornment: (
+                      <InputAdornment position="start">
+                        <MdSearch size={24} color={theme.palette.text.secondary} />
+                      </InputAdornment>
+                  ),
+                }}
+            />
+          </motion.div>
+        </Box>
+
+        {/* Property Grid */}
+        <Grid container spacing={3}>
+          {filteredProperties.map((property, index) => (
+              <Grid item xs={12} sm={6} md={4} key={property.id}>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <PropertyCard
+                      property={property}
+                      onClick={() => handlePropertyClick(property)}
+                      onPurchaseClick={(event) => handlePurchaseClick(property, event)}
+                  />
+                </motion.div>
+              </Grid>
+          ))}
+        </Grid>
+
+        {/* Purchase Modal */}
+        {selectedProperty && (
+            <TokenPurchaseModal
+                open={purchaseModalOpen}
+                onClose={() => setPurchaseModalOpen(false)}
+                property={selectedProperty}
+                onPurchase={handlePurchase}
+            />
+        )}
+      </Container>
   );
 };
 
-export default Marketplace; 
+export default Marketplace;

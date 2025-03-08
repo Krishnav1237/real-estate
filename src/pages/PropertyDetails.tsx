@@ -17,10 +17,8 @@ import {
   Paper,
   useTheme,
   alpha,
-  IconButton,
 } from '@mui/material';
 import { motion } from 'framer-motion';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -119,8 +117,12 @@ const mockProperty = {
   },
 };
 
+interface LeafletIconDefaultPrototype extends L.Icon.Default {
+    _getIconUrl?: () => string;
+}
+
 // Fix Leaflet default marker icon
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+delete (L.Icon.Default.prototype as LeafletIconDefaultPrototype)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
@@ -172,7 +174,7 @@ const MapComponent = ({ coordinates }: { coordinates: { lat: number; lng: number
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(mapRef.current);
-      
+
       L.marker([coordinates.lat, coordinates.lng]).addTo(mapRef.current);
     }
 
@@ -191,13 +193,13 @@ const MapComponent = ({ coordinates }: { coordinates: { lat: number; lng: number
 
 const PropertyDetails = () => {
   const theme = useTheme();
-  const { id } = useParams();
+  const { id : propertyId } = useParams();
   const [tokenAmount, setTokenAmount] = useState('');
   const [activeImage, setActiveImage] = useState(0);
 
   const handlePurchase = () => {
-    // Implement token purchase logic here
-    console.log(`Purchasing ${tokenAmount} tokens`);
+      // Implement token purchase logic here
+      console.log(`Purchasing ${tokenAmount} tokens for property ${propertyId}`);
   };
 
   // Format location data
@@ -269,8 +271,8 @@ const PropertyDetails = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             {/* Main Image */}
-            <Card 
-              sx={{ 
+            <Card
+              sx={{
                 mb: 2,
                 borderRadius: 2,
                 overflow: 'hidden',
@@ -320,11 +322,11 @@ const PropertyDetails = () => {
             </Box>
 
             {/* Performance Metrics */}
-            <Paper 
+            <Paper
               elevation={2}
-              sx={{ 
-                p: 3, 
-                mb: 4, 
+              sx={{
+                p: 3,
+                mb: 4,
                 borderRadius: 2,
                 bgcolor: alpha(theme.palette.background.paper, 0.8),
               }}
@@ -381,11 +383,11 @@ const PropertyDetails = () => {
             </Paper>
 
             {/* Description */}
-            <Paper 
-              elevation={2} 
-              sx={{ 
-                p: 3, 
-                mb: 4, 
+            <Paper
+              elevation={2}
+              sx={{
+                p: 3,
+                mb: 4,
                 borderRadius: 2,
                 bgcolor: alpha(theme.palette.background.paper, 0.8),
               }}
@@ -399,11 +401,11 @@ const PropertyDetails = () => {
             </Paper>
 
             {/* Features and Amenities */}
-            <Paper 
+            <Paper
               elevation={2}
-              sx={{ 
-                p: 3, 
-                mb: 4, 
+              sx={{
+                p: 3,
+                mb: 4,
                 borderRadius: 2,
                 bgcolor: alpha(theme.palette.background.paper, 0.8),
               }}
@@ -494,11 +496,11 @@ const PropertyDetails = () => {
             </Paper>
 
             {/* Location Details */}
-            <Paper 
+            <Paper
               elevation={2}
-              sx={{ 
-                p: 3, 
-                mb: 4, 
+              sx={{
+                p: 3,
+                mb: 4,
                 borderRadius: 2,
                 bgcolor: alpha(theme.palette.background.paper, 0.8),
               }}
@@ -506,7 +508,7 @@ const PropertyDetails = () => {
               <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: theme.palette.primary.main }}>
                 Location & Accessibility
               </Typography>
-              
+
               {/* Map Preview */}
               <Box
                 sx={{
@@ -623,7 +625,7 @@ const PropertyDetails = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
             elevation={3}
-            sx={{ 
+            sx={{
               p: 3,
               borderRadius: 2,
               position: 'sticky',
@@ -711,7 +713,7 @@ const PropertyDetails = () => {
                 label="Number of Tokens"
                 value={tokenAmount}
                 onChange={(e) => setTokenAmount(e.target.value)}
-                sx={{ 
+                sx={{
                   mb: 2,
                   '& .MuiOutlinedInput-root': {
                     bgcolor: alpha(theme.palette.common.white, 0.9),
@@ -779,7 +781,7 @@ const PropertyDetails = () => {
                   }}
                 >
                   <PictureAsPdfIcon sx={{ mr: 1, color: theme.palette.error.main }} />
-                  <ListItemText 
+                  <ListItemText
                     primary={doc.name}
                     sx={{
                       '& .MuiListItemText-primary': {
@@ -798,4 +800,4 @@ const PropertyDetails = () => {
   );
 };
 
-export default PropertyDetails; 
+export default PropertyDetails;

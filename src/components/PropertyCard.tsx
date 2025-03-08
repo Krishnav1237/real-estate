@@ -1,5 +1,6 @@
-import { Box, Typography, Chip, IconButton, useTheme, alpha, Button } from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { Box, Typography, Chip, useTheme, alpha, Button } from '@mui/material';
+import { motion } from 'framer-motion';
 import { FaEthereum } from 'react-icons/fa';
 import { BiArea, BiTime } from 'react-icons/bi';
 import { MdLocationOn, MdVerified, MdShoppingCart } from 'react-icons/md';
