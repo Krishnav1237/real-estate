@@ -1,0 +1,10 @@
+[package]
+name = "marketplace"
+version = "1.0.0"
+authors = ["Your Name"]
+
+[addresses]
+marketplace = "d5ff7fd86cd844e54533482fbca61e5b2a7159242d5fff1cc16337c75fac4b59"
+
+[dependencies]
+AptosFramework = { git = "https://github.com/aptos-labs/aptos-core.git", subdir = "aptos-move/framework/aptos-framework/", rev = "mainnet" }

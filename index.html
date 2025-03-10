@@ -5,6 +5,23 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React + TS</title>
+    <script>
+      window.onload = () => {
+        // Check for Petra wallet every 200ms for up to 5 seconds
+        let attempts = 0;
+        const checkForPetra = setInterval(() => {
+          attempts++;
+          if (window.aptos || attempts > 25) {
+            clearInterval(checkForPetra);
+            if (window.aptos) {
+              console.log("Petra wallet detected");
+            } else {
+              console.log("Petra wallet not detected");
+            }
+          }
+        }, 200);
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

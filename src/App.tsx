@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Portfolio from './pages/Portfolio';
 import Analytics from './pages/Analytics';
+import Admin from './pages/Admin';
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ function App() {
                 <Route path="/analytics" element={<Analytics />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/admin" element={<Admin />} />
               </Routes>
             </Layout>
           </Router>
