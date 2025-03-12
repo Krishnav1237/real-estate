@@ -1,9 +1,9 @@
-import { AptosAccount, AptosClient, Types} from 'aptos';
+// src/services/aptosService.ts
+import { AptosClient, Types } from 'aptos'; // Using the original 'aptos' package
 
-// Switch to testnet
-const NODE_URL = import.meta.env.VITE_APTOS_NODE_URL || 'https://fullnode.testnet.aptoslabs.com/v1';
-// Initialize the client
-const client = new AptosClient(NODE_URL);
+// Initialize the client with Movement blockchain endpoint
+const client = new AptosClient(import.meta.env.VITE_APTOS_NODE_URL || 'https://aptos.testnet.bardock.movementlabs.xyz/v1');
+
 // Define marketplace contract address
 const MARKETPLACE_ADDRESS = import.meta.env.VITE_MARKETPLACE_ADDRESS || '0xd5ff7fd86cd844e54533482fbca61e5b2a7159242d5fff1cc16337c75fac4b59';
 
@@ -54,7 +54,6 @@ interface ListItemEventData {
 }
 
 // Add Petra wallet types
-// Fix the any type in the Petra wallet interface
 declare global {
     interface Window {
         aptos?: {
@@ -62,7 +61,6 @@ declare global {
             isConnected(): Promise<boolean>;
             connect(): Promise<{ address: string }>;
             disconnect(): Promise<void>;
-            // Replace 'any' with proper type
             signAndSubmitTransaction(transaction: Types.EntryFunctionPayload): Promise<{ hash: string }>;
             network?(): Promise<string>;
         }
@@ -120,7 +118,6 @@ class AptosService {
     }
 
     // Sign and submit transaction with Petra wallet
-    // Sign and submit transaction with Petra wallet
     async signAndSubmitTransactionWithPetra(payload: Types.EntryFunctionPayload): Promise<string> {
         if (!this.isPetraInstalled()) {
             throw new Error("Petra wallet is not installed");
@@ -135,20 +132,6 @@ class AptosService {
             throw error;
         }
     }
-
-    // Create a new account for testing (legacy method) without funding
-    async createAccount(): Promise<AptosAccount> {
-        // Just create the account without trying to fund it
-        const account = new AptosAccount();
-        console.log("Created account:", account.address().hex());
-
-        // Note: No funding is happening here anymore
-        // User will need to have a funded account in their Petra wallet instead
-
-        return account;
-    }
-
-    // Add this to aptosService.ts
     getMarketplaceAddress(): string {
         return MARKETPLACE_ADDRESS;
     }
@@ -159,15 +142,10 @@ class AptosService {
             throw new Error("Petra wallet is not installed");
         }
 
-        // Ensure wallet is connected before proceeding
         const isConnected = await window.aptos?.isConnected();
         if (!isConnected) {
             throw new Error("Petra wallet is not connected. Please connect your wallet first.");
         }
-
-        // Get the current wallet account to log it (for debugging)
-        const account = await window.aptos?.account();
-        console.log("Sending transaction from Petra wallet account:", account?.address);
 
         const payload: Types.EntryFunctionPayload = {
             function: `${MARKETPLACE_ADDRESS}::marketplace::initialize`,
@@ -176,23 +154,6 @@ class AptosService {
         };
 
         return this.signAndSubmitTransactionWithPetra(payload);
-    }
-
-
-
-    // Legacy method for initializing marketplace with a test account
-    async initializeMarketplace(
-        admin: AptosAccount,
-        feePercentage: number
-    ): Promise<string> {
-        const payload: Types.EntryFunctionPayload = {
-            function: `${MARKETPLACE_ADDRESS}::marketplace::initialize`,
-            type_arguments: [],
-            arguments: [feePercentage],
-        };
-
-        const txnHash = await this.submitTransaction(admin, payload);
-        return txnHash;
     }
 
     // List an item for sale using Petra wallet
@@ -212,26 +173,6 @@ class AptosService {
         return this.signAndSubmitTransactionWithPetra(payload);
     }
 
-    // Legacy method for listing an item
-    async listItem(
-        seller: AptosAccount,
-        price: number,
-        name: string,
-        description: string,
-        imageUrl: string,
-        coinType: string = APT_COIN_TYPE
-    ): Promise<string> {
-        console.log("Marketplace address:", MARKETPLACE_ADDRESS);
-        const payload: Types.EntryFunctionPayload = {
-            function: `${MARKETPLACE_ADDRESS}::marketplace::list_item`,
-            type_arguments: [coinType],
-            arguments: [price, name, description, imageUrl, MARKETPLACE_ADDRESS],
-        };
-
-        const txnHash = await this.submitTransaction(seller, payload);
-        return txnHash;
-    }
-
     // Buy an item using Petra wallet
     async buyItemWithPetra(
         listingId: number,
@@ -246,22 +187,6 @@ class AptosService {
         return this.signAndSubmitTransactionWithPetra(payload);
     }
 
-    // Legacy method for buying an item
-    async buyItem(
-        buyer: AptosAccount,
-        listingId: number,
-        coinType: string = APT_COIN_TYPE
-    ): Promise<string> {
-        const payload: Types.EntryFunctionPayload = {
-            function: `${MARKETPLACE_ADDRESS}::marketplace::buy_item`,
-            type_arguments: [coinType],
-            arguments: [listingId, MARKETPLACE_ADDRESS],
-        };
-
-        const txnHash = await this.submitTransaction(buyer, payload);
-        return txnHash;
-    }
-
     // Cancel a listing with Petra wallet
     async cancelListingWithPetra(listingId: number): Promise<string> {
         const payload: Types.EntryFunctionPayload = {
@@ -271,21 +196,6 @@ class AptosService {
         };
 
         return this.signAndSubmitTransactionWithPetra(payload);
-    }
-
-    // Legacy method for cancelling a listing
-    async cancelListing(
-        seller: AptosAccount,
-        listingId: number
-    ): Promise<string> {
-        const payload: Types.EntryFunctionPayload = {
-            function: `${MARKETPLACE_ADDRESS}::marketplace::cancel_listing`,
-            type_arguments: [],
-            arguments: [listingId, MARKETPLACE_ADDRESS],
-        };
-
-        const txnHash = await this.submitTransaction(seller, payload);
-        return txnHash;
     }
 
     // Update marketplace fee percentage with Petra wallet
@@ -299,21 +209,6 @@ class AptosService {
         return this.signAndSubmitTransactionWithPetra(payload);
     }
 
-    // Legacy method for updating fee percentage
-    async updateFeePercentage(
-        admin: AptosAccount,
-        newFeePercentage: number
-    ): Promise<string> {
-        const payload: Types.EntryFunctionPayload = {
-            function: `${MARKETPLACE_ADDRESS}::marketplace::update_fee_percentage`,
-            type_arguments: [],
-            arguments: [newFeePercentage, MARKETPLACE_ADDRESS],
-        };
-
-        const txnHash = await this.submitTransaction(admin, payload);
-        return txnHash;
-    }
-
     // Set marketplace paused/unpaused state with Petra wallet
     async setMarketplacePausedWithPetra(isPaused: boolean): Promise<string> {
         const payload: Types.EntryFunctionPayload = {
@@ -325,21 +220,7 @@ class AptosService {
         return this.signAndSubmitTransactionWithPetra(payload);
     }
 
-    // Legacy method for setting marketplace paused state
-    async setMarketplacePaused(
-        admin: AptosAccount,
-        isPaused: boolean
-    ): Promise<string> {
-        const payload: Types.EntryFunctionPayload = {
-            function: `${MARKETPLACE_ADDRESS}::marketplace::set_paused`,
-            type_arguments: [],
-            arguments: [isPaused, MARKETPLACE_ADDRESS],
-        };
-
-        const txnHash = await this.submitTransaction(admin, payload);
-        return txnHash;
-    }
-
+    // View functions for querying the blockchain
     async getAllListings(): Promise<MockListing[]> {
         try {
             // Check if the marketplace resource exists
@@ -367,23 +248,24 @@ class AptosService {
                 const data = event.data as ListItemEventData;
                 const listingDetails = await this.getListingDetails(Number(data.listing_id));
 
-                // Only include listings that are active (status = 1)
-                if (listingDetails && listingDetails.status === 1) {
+                // Only include active listings
+                if (listingDetails && listingDetails.isActive) {
                     listings.push({
                         id: data.listing_id,
-                        title: data.name,
-                        location: "On-chain Property",
-                        price: Number(data.price),
-                        area: 1000, // Default area value
-                        imageUrl: listingDetails.imageUrl || "https://images.unsplash.com/photo-1560518883-ce09059eeffa",
-                        tokenPrice: Number(data.price) / 1000,
+                        title: listingDetails.name,
+                        location: "On-chain Property", // Default location
+                        price: listingDetails.price,
+                        area: 1000, // Default area
+                        imageUrl: listingDetails.imageUrl,
+                        tokenPrice: listingDetails.price / 1000, // Simplified token price calculation
                         totalTokens: 1000,
                         availableTokens: 1000,
                         verified: true,
-                        expectedReturn: 12,
-                        investmentPeriod: "5 years",
-                        description: listingDetails.description || "Blockchain listing",
-                        seller: data.seller
+                        expectedReturn: 10, // Default expected return
+                        investmentPeriod: "1 year", // Default investment period
+                        description: listingDetails.description,
+                        seller: listingDetails.seller,
+                        source: 'blockchain'
                     });
                 }
             }
@@ -392,20 +274,19 @@ class AptosService {
             return listings;
         } catch (error) {
             console.error("Error fetching blockchain listings:", error);
-            return [];
+            return this.getMockListings();
         }
     }
 
-    // Get listing details
     async getListingDetails(listingId: number): Promise<ListingDetails | null> {
         try {
             const result = await client.view({
                 function: `${MARKETPLACE_ADDRESS}::marketplace::get_listing_details`,
                 type_arguments: [],
-                arguments: [MARKETPLACE_ADDRESS, listingId.toString()], // Convert to string
+                arguments: [MARKETPLACE_ADDRESS, listingId.toString()],
             });
 
-            if (result && result.length === 7) {
+            if (result && result.length >= 7) {
                 const [seller, price, name, description, imageUrl, status, createdAt] = result;
                 return {
                     seller: seller as string,
@@ -415,7 +296,7 @@ class AptosService {
                     imageUrl: imageUrl as string,
                     status: Number(status),
                     createdAt: Number(createdAt),
-                    isActive: Number(status) === 1 // LISTING_STATUS_ACTIVE
+                    isActive: Number(status) === 1
                 };
             }
             return null;
@@ -425,7 +306,6 @@ class AptosService {
         }
     }
 
-    // Check if listing is active
     async isListingActive(listingId: number): Promise<boolean> {
         try {
             const result = await client.view({
@@ -441,7 +321,6 @@ class AptosService {
         }
     }
 
-    // Get marketplace fee percentage
     async getFeePercentage(): Promise<number> {
         try {
             const result = await client.view({
@@ -457,7 +336,6 @@ class AptosService {
         }
     }
 
-    // Get account resources
     async getAccountResources(address: string): Promise<AccountResource[]> {
         try {
             return await client.getAccountResources(address);
@@ -467,7 +345,6 @@ class AptosService {
         }
     }
 
-    // Get account balance
     async getAccountBalance(address: string, coinType: string = APT_COIN_TYPE): Promise<number> {
         try {
             const resources = await client.getAccountResources(address);
@@ -484,23 +361,8 @@ class AptosService {
         }
     }
 
-    // Helper function to submit a transaction
-    private async submitTransaction(account: AptosAccount, payload: Types.EntryFunctionPayload): Promise<string> {
-        try {
-            const txnRequest = await client.generateTransaction(account.address(), payload);
-            const signedTxn = await client.signTransaction(account, txnRequest);
-            const transactionRes = await client.submitTransaction(signedTxn);
-            await client.waitForTransaction(transactionRes.hash);
-            return transactionRes.hash;
-        } catch (error) {
-            console.error("Error submitting transaction:", error);
-            throw new Error(`Transaction failed: ${error}`);
-        }
-    }
-
-    // For demo/testing: get mock listings (unchanged)
-    async getMockListings(limit: number = 10): Promise<MockListing[]> {
-        // Mock listings as before
+    // Mock listings for testing/demo
+    getMockListings(limit: number = 10): MockListing[] {
         const mockListings: MockListing[] = [
             {
                 id: '1',
@@ -515,8 +377,9 @@ class AptosService {
                 verified: true,
                 expectedReturn: 12.5,
                 investmentPeriod: '5 years',
+                source: 'mock'
             },
-            // ... other mock listings as before
+            // Add more mock listings as needed
         ];
 
         return mockListings.slice(0, limit);

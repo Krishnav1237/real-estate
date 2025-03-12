@@ -2,9 +2,7 @@ module marketplace::marketplace {
     use std::error;
     use std::signer;
     use std::string::String;
-    // Removed Self from string import since it wasn't used
     use aptos_framework::coin;
-    // Removed Self and Coin from coin import since they weren't used
     use aptos_framework::timestamp;
     use aptos_framework::account::{Self, SignerCapability};
     use aptos_std::table::{Self, Table};
