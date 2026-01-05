@@ -29,6 +29,9 @@ const ThreeBackground = () => {
   useEffect(() => {
     if (!containerRef.current) return;
 
+    // Store the container ref value to use in cleanup
+    const container = containerRef.current;
+
     // Check if WebGL is available
     if (!isWebGLAvailable()) {
       console.warn('WebGL is not available. Using fallback background.');
@@ -53,8 +56,8 @@ const ThreeBackground = () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
     // Only append if not already appended
-    if (!containerRef.current.contains(renderer.domElement)) {
-      containerRef.current.appendChild(renderer.domElement);
+    if (!container.contains(renderer.domElement)) {
+      container.appendChild(renderer.domElement);
     }
 
     // Create multiple particle systems
@@ -184,8 +187,8 @@ const ThreeBackground = () => {
 
     // Cleanup
     return () => {
-      if (containerRef.current && renderer.domElement.parentElement === containerRef.current) {
-        containerRef.current.removeChild(renderer.domElement);
+      if (container && renderer.domElement.parentElement === container) {
+        container.removeChild(renderer.domElement);
       }
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);

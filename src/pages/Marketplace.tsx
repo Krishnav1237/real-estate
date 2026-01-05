@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Container,
@@ -97,7 +97,7 @@ const Marketplace = () => {
     // Fetch properties from the smart contract
     useEffect(() => {
         fetchProperties();
-    }, []);
+    }, [fetchProperties]);
 
     // Apply filters and sorting
     useEffect(() => {
@@ -140,7 +140,7 @@ const Marketplace = () => {
     }, [properties, searchQuery, sortBy, filterType]);
 
     // In the fetchProperties function
-    const fetchProperties = async () => {
+    const fetchProperties = useCallback(async () => {
         setLoading(true);
         try {
             // Get real listings from blockchain
@@ -170,11 +170,13 @@ const Marketplace = () => {
             setFilteredProperties(combinedListings);
         } catch (error) {
             console.error("Error fetching properties:", error);
-            showSnackbar('Failed to load properties', 'error');
+            setSnackbarMessage('Failed to load properties');
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     const handlePropertyClick = (property: Property) => {
         navigate(`/property/${property.id}`);
@@ -194,7 +196,7 @@ const Marketplace = () => {
         if (!isConnected) {
             try {
                 await connect();
-            } catch (error) {
+            } catch {
                 showSnackbar('Failed to connect wallet', 'error');
                 return;
             }
