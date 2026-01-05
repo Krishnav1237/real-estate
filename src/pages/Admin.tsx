@@ -58,7 +58,7 @@ const Admin = () => {
         if (!isConnected) {
             try {
                 await connect();
-            } catch (error) {
+            } catch {
                 setResult({
                     success: false,
                     message: "Please connect your wallet first."
